@@ -1,0 +1,31 @@
+---
+title: "Vehicle choices"
+author: "Ronald Bentil"
+date: "2023-09-04"
+categories: [news, code, analysis]
+image: "Image.jpg"
+---
+
+This post displays information on certain parameters for car buyers to consider to potentially help make informed decisions.
+
+```{r}
+data(mtcars)
+head(mtcars)
+```
+
+```{r}
+library(ggplot2)
+
+# Create a new variable to combine vehicle names, vehicle type, and number of cylinders
+mtcars$VehicleInfo <- paste(rownames(mtcars), mtcars$cyl, mtcars$am, sep = " - ")
+
+# Create a bar chart
+ggplot(data = mtcars, aes(x = VehicleInfo, y = mpg)) +
+  geom_bar(stat = "summary", fun = "mean", fill = "grey") +
+  theme_minimal() +
+  xlab("Vehicle Name, Type, and Number of Cylinders") +
+  ylab("Average Miles per Gallon") +
+  ggtitle("Average Miles per Gallon by Vehicle Name, Type, and Number of Cylinders") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```

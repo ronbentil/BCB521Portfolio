@@ -1,0 +1,16 @@
+{
+  "hash": "acc8fdbeaa49fbafeb8ed97d2afdb12f",
+  "result": {
+    "markdown": "---\ntitle: \"Vehicle choices\"\nauthor: \"Ronald Bentil\"\ndate: \"2023-09-04\"\ncategories: [news, code, analysis]\nimage: \"Image.jpg\"\n---\n\n\nThis post displays information on certain parameters for car buyers to consider to potentially help make informed decisions.\n\n\n::: {.cell}\n\n```{.r .cell-code}\ndata(mtcars)\nhead(mtcars)\n```\n\n::: {.cell-output .cell-output-stdout}\n```\n                   mpg cyl disp  hp drat    wt  qsec vs am gear carb\nMazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4\nMazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4\nDatsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1\nHornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1\nHornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2\nValiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1\n```\n:::\n:::\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(ggplot2)\n\n# Create a new variable to combine vehicle names, vehicle type, and number of cylinders\nmtcars$VehicleInfo <- paste(rownames(mtcars), mtcars$cyl, mtcars$am, sep = \" - \")\n\n# Create a bar chart\nggplot(data = mtcars, aes(x = VehicleInfo, y = mpg)) +\n  geom_bar(stat = \"summary\", fun = \"mean\", fill = \"grey\") +\n  theme_minimal() +\n  xlab(\"Vehicle Name, Type, and Number of Cylinders\") +\n  ylab(\"Average Miles per Gallon\") +\n  ggtitle(\"Average Miles per Gallon by Vehicle Name, Type, and Number of Cylinders\") +\n  theme(axis.text.x = element_text(angle = 90, hjust = 1))\n```\n\n::: {.cell-output-display}\n![](index_files/figure-html/unnamed-chunk-2-1.png){width=672}\n:::\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

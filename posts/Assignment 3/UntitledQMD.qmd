@@ -3,20 +3,9 @@ title: "Assignment 3"
 author: "Ronald Bentil"
 date: "2023-09-06"
 categories: [news, code, analysis]
-image: "Image.jpg"
+code-fold: true
+code-tools: true
 ---
-
-```{r}
-library(tidyverse)
-
-```
-
-```{r}
-library(readxl)
-DAMdata <- read_excel("DAMdata.xlsx")
-View(DAMdata)
-```
-
 ## Description of dataset
 
 The data was collected in the Luckhart lab using a locomotor activity monitor. The data represents individual counts of mosquito movements upon treatment with different concentrations of Serotonin which is a neuromodulator in the brain of insects and affects their behaviour.
@@ -34,10 +23,33 @@ The monitor records activity (up and down movement) from start of experiment til
 
 Variables in the dataset have are described in the data dictionary below
 
+
+```{r}
+library(readxl)
+DAMdata <- read_excel("DAMdata.xlsx")
+
+library(knitr)
+invisible(library(kableExtra))
+
+kable(DAMdata, caption = "Table 1: Mosquito circadian activity") %>%
+  kable_styling()
+```
+
+
 ```{r}
 library(readxl)
 DAMdatadictionary <- read_excel("DAMdatadictionary.xlsx")
-View(DAMdatadictionary)
+
+suppressPackageStartupMessages(library(tidyverse))
+library(readxl)
+invisible(library(dplyr))
+invisible(library(kableExtra))
+
+suppressMessages({
+  DAMdatadictionary <- read_excel("DAMdatadictionary.xlsx")
+  knitr::kable(DAMdatadictionary, caption = "Table 2: Mosquito circadian activity data dictionary") %>%
+    kable_styling()
+})
 ```
 
 

@@ -1,0 +1,46 @@
+---
+title: "Assignment 3"
+author: "Ronald Bentil"
+date: "2023-09-06"
+categories: [news, code, analysis]
+image: "Image.jpg"
+---
+
+```{r}
+library(tidyverse)
+
+```
+
+```{r}
+library(readxl)
+DAMdata <- read_excel("DAMdata.xlsx")
+View(DAMdata)
+```
+
+
+
+## Description of dataset
+
+The data was collected in the Luckhart lab using a locomotor activity monitor. The data represents individual counts of mosquito movements upon treatment with different concentrations of Serotonin which is a neuromodulator in the brain of insects and affects their behaviour.
+
+## Data collection
+
+Male mosquitoes were primed (treated) with 3 different concentrations (0.15uM, 1.5uM and 15uM) of Serotonin (5-HT) for three consecutive days.One group of males were allowed to mate with female mosquitoes (mated males) and another group non allowed to mate. Following this, their activity were measured.
+
+## Data prepration
+
+The monitor records activity (up and down movement) from start of experiment till experiment is ended. However, because we the data of interest is circadian activity, the data was trimmed to a a 24-hour window starting from 7pm (12-hour dark period and 12-hour light period)
+
+
+## Describing variables in the data
+
+Variables in the dataset have are described in the data dictionary below
+
+
+
+```{r}
+library(readxl)
+DAMdatadictionary <- read_excel("DAMdatadictionary.xlsx")
+View(DAMdatadictionary)
+```
+

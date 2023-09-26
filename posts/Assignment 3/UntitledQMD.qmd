@@ -25,13 +25,31 @@ Variables in the dataset have are described in the data dictionary below
 
 
 ```{r}
+
+library(tidyverse)
+
 library(readxl)
 DAMdata <- read_excel("DAMdata.xlsx")
+
+
+
+DAMdata.mated <- read_excel("DAMdata.xlsx", sheet = "mated", skip=1)
+
+DAMdata.nonmated <- read_excel("DAMdata.xlsx", sheet = "non-mated", skip=1)
+
+library(tidyverse)
 
 library(knitr)
 invisible(library(kableExtra))
 
-kable(DAMdata, caption = "Table 1: Mosquito circadian activity") %>%
+DAMdata.mated <- DAMdata.mated %>%
+  mutate(newtime=ymd_hms(Time))
+
+DAMdata.nonmated <- DAMdata.nonmated %>%
+  mutate(newtime=ymd_hms(Time))
+
+
+kable(head(DAMdata), caption = "Table 1: Mosquito circadian activity") %>%
   kable_styling()
 ```
 
@@ -50,6 +68,102 @@ suppressMessages({
   knitr::kable(DAMdatadictionary, caption = "Table 2: Mosquito circadian activity data dictionary") %>%
     kable_styling()
 })
+```
+## Data wrangling
+
+Reassign treatment values to columns
+summarize counts to hours 
+summarize into treatments
+
+
+## MATED PLOT
+```{r}
+DAMdata.mated <- read_excel("DAMdata.xlsx", sheet = "mated", skip=1)
+
+newDAM.mated <- DAMdata.mated %>%
+  pivot_longer(cols = !Time, names_to = "ID", values_to = "Activity") %>%
+  mutate(
+    Treatment = case_when(
+      as.numeric(str_extract(ID, "\\d+")) <= 8  ~ "Control",
+      as.numeric(str_extract(ID, "\\d+")) <= 16 ~ "0.15uM Serotonin",
+      as.numeric(str_extract(ID, "\\d+")) <= 24 ~ "1.5uM Serotonin",
+      as.numeric(str_extract(ID, "\\d+")) <= 32 ~ "15uM Serotonin",
+      TRUE                                          ~ "Other"
+    )
+  )
+
+kable(head(newDAM.mated), caption = "Table 3: Mosquito circadian activity") %>%
+  kable_styling()
+```
+
+
+```{r}
+library(lubridate)
+
+sum.mated <- newDAM.mated %>%
+  mutate(hour_bin = floor_date(Time, unit = "hour")) %>%
+  group_by(hour_bin, Treatment) %>%
+  summarise(Total_Activity = sum(Activity), .groups = 'drop')
+
+kable(head(sum.mated), caption = "Table 3: Mosquito circadian activity") %>%
+  kable_styling()
+```
+
+
+```{r}
+library(scales)
+
+ggplot(sum.mated, aes(x=hour_bin, y=Total_Activity))+
+  geom_col()+
+  facet_wrap(~Treatment, ncol = 1)+
+  scale_x_datetime(labels = date_format("%H:%M")) 
+
+
+```
+
+
+## NON-MATED PLOT
+```{r}
+DAMdata.nonmated <- read_excel("DAMdata.xlsx", sheet = "non-mated", skip=1)
+
+newDAM.nonmated <- DAMdata.nonmated %>%
+  pivot_longer(cols = !Time, names_to = "ID", values_to = "Activity") %>%
+  mutate(
+    Treatment = case_when(
+      as.numeric(str_extract(ID, "\\d+")) <= 8  ~ "Control",
+      as.numeric(str_extract(ID, "\\d+")) <= 16 ~ "0.15uM Serotonin",
+      as.numeric(str_extract(ID, "\\d+")) <= 24 ~ "1.5uM Serotonin",
+      as.numeric(str_extract(ID, "\\d+")) <= 32 ~ "15uM Serotonin",
+      TRUE                                          ~ "Other"
+    )
+  )
+
+kable(head(newDAM.nonmated), caption = "Table 3: Mosquito circadian activity") %>%
+  kable_styling()
+```
+
+
+```{r}
+library(lubridate)
+
+sum.nonmated <- newDAM.nonmated %>%
+  mutate(hour_bin = floor_date(Time, unit = "hour")) %>%
+  group_by(hour_bin, Treatment) %>%
+  summarise(Total_Activity = sum(Activity), .groups = 'drop')
+
+kable(head(sum.nonmated), caption = "Table 3: Mosquito circadian activity") %>%
+  kable_styling()
+```
+
+
+```{r}
+library(scales)
+
+ggplot(sum.nonmated, aes(x=hour_bin, y=Total_Activity))+
+  geom_col()+
+  facet_wrap(~Treatment, ncol = 1)+
+  scale_x_datetime(labels = date_format("%H:%M")) 
+
 ```
 
 

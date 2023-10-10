@@ -1,0 +1,26 @@
+---
+title: "Assignment 4"
+author: "Ronald Bentil"
+date: "2023-09-28"
+categories: [news, code, analysis]
+code-fold: true
+code-tools: true
+---
+
+# DESCRIPTION
+
+Malaria is a global problem that continues to take lives especially in sub-Saharan Africa. Until recently when local transmission was detected in Florida and Texas, it was believed to have been eliminated from the United States.
+
+In spite of the many interventions implemented over the years, the vector, populations of the female *Anopheles* mosquito persist and fuel transmission of the *Plasmodium* parasite.
+
+Therefore, I sought to explore key life history traits of the mosquito such as mating, activity and manipulating receptors of serotonin (a biogenic amine) in the head of the mosquito, and this could provide possible approaches for controlling the vector and ultimately disease prevalence.
+
+# RESULTS
+
+![](images/Rplot_mated.png)
+
+**Figure 1: Periodic activity of mated mosquitoes treated with 5-HT**
+
+![](images/Rplot_nonmated.png)
+
+**Figure 2: Periodic activity of mated mosquitoes treated with 5-HT**

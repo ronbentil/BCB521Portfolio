@@ -1,0 +1,82 @@
+---
+title: "Assignment 5- creating a storybaord"
+author: "Ronald Bentil"
+date: "2023-09-28"
+categories: [news, code, analysis]
+code-fold: true
+code-tools: true
+---
+
+
+```{r}
+df<- sum.mated
+
+
+library(lubridate) 
+
+df$hour_bin <- ymd_hms(df$hour_bin)
+
+ggplot(df, aes(x = hour_bin, y = Total_Activity)) +
+  geom_line() +
+  facet_wrap(~Treatment) + 
+  scale_x_datetime(date_labels = "%H:%M")
+
+```
+```{r}
+df<- sum.nonmated
+
+
+library(lubridate) 
+
+df$hour_bin <- ymd_hms(df$hour_bin)
+
+ggplot(df, aes(x = hour_bin, y = Total_Activity)) +
+  geom_line() +
+  facet_wrap(~Treatment) + 
+  scale_x_datetime(date_labels = "%H:%M")
+```
+#filtering control only as treatment
+
+
+## Mated
+```{r}
+library(lubridate)
+library(ggplot2)
+
+df <- sum.mated
+
+
+df$hour_bin <- ymd_hms(df$hour_bin)
+
+specific_treatment <- "Control"
+filtered_df <- df[df$Treatment == specific_treatment,]
+
+
+ggplot(filtered_df, aes(x = hour_bin, y = Total_Activity)) +
+  geom_line() +
+  scale_x_datetime(date_labels = "%H:%M") +
+  labs(title = paste("Treatment:", specific_treatment))
+
+```
+
+
+## Non-mated
+```{r}
+df <- sum.nonmated
+
+
+df$hour_bin <- ymd_hms(df$hour_bin)
+
+# Filter the data for a specific treatment (e.g., "Treatment1")
+specific_treatment <- "Control"
+filtered_df <- df[df$Treatment == specific_treatment,]
+
+# Create the plot for the specific treatment
+ggplot(filtered_df, aes(x = hour_bin, y = Total_Activity)) +
+  geom_line() +
+  scale_x_datetime(date_labels = "%H:%M") +
+  labs(title = paste("Treatment:", specific_treatment))
+
+```
+
+

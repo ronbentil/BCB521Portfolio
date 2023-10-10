@@ -5,7 +5,10 @@ date: "2023-09-06"
 categories: [news, code, analysis]
 code-fold: true
 code-tools: true
+editor_options: 
+  chunk_output_type: console
 ---
+
 ## Description of dataset
 
 The data was collected in the Luckhart lab using a locomotor activity monitor. The data represents individual counts of mosquito movements upon treatment with different concentrations of Serotonin which is a neuromodulator in the brain of insects and affects their behaviour.
@@ -18,18 +21,17 @@ Male mosquitoes were primed (treated) with 3 different concentrations (0.15uM, 1
 
 The monitor records activity (up and down movement) from start of experiment till experiment is ended. However, because we the data of interest is circadian activity, the data was trimmed to a a 24-hour window starting from 7pm (12-hour dark period and 12-hour light period)
 
-
 ## Describing variables in the data
 
 Variables in the dataset have are described in the data dictionary below
-
 
 ```{r}
 
 library(tidyverse)
 
 library(readxl)
-DAMdata <- read_excel("DAMdata.xlsx")
+DAMdata <- read_excel("posts/Assignment 3/DAMdata.xlsx")
+
 
 
 
@@ -53,7 +55,6 @@ kable(head(DAMdata), caption = "Table 1: Mosquito circadian activity") %>%
   kable_styling()
 ```
 
-
 ```{r}
 library(readxl)
 DAMdatadictionary <- read_excel("DAMdatadictionary.xlsx")
@@ -69,14 +70,13 @@ suppressMessages({
     kable_styling()
 })
 ```
+
 ## Data wrangling
 
-Reassign treatment values to columns
-summarize counts to hours 
-summarize into treatments
-
+Reassign treatment values to columns summarize counts to hours summarize into treatments
 
 ## MATED PLOT
+
 ```{r}
 DAMdata.mated <- read_excel("DAMdata.xlsx", sheet = "mated", skip=1)
 
@@ -96,7 +96,6 @@ kable(head(newDAM.mated), caption = "Table 3: Mosquito circadian activity") %>%
   kable_styling()
 ```
 
-
 ```{r}
 library(lubridate)
 
@@ -109,20 +108,19 @@ kable(head(sum.mated), caption = "Table 3: Mosquito circadian activity") %>%
   kable_styling()
 ```
 
-
 ```{r}
 library(scales)
 
 ggplot(sum.mated, aes(x=hour_bin, y=Total_Activity))+
   geom_col()+
   facet_wrap(~Treatment, ncol = 1)+
-  scale_x_datetime(labels = date_format("%H:%M")) 
-
+  scale_x_datetime(labels = date_format("%H:%M"))+
+  ylim(0,1200)
 
 ```
 
-
 ## NON-MATED PLOT
+
 ```{r}
 DAMdata.nonmated <- read_excel("DAMdata.xlsx", sheet = "non-mated", skip=1)
 
@@ -142,7 +140,6 @@ kable(head(newDAM.nonmated), caption = "Table 3: Mosquito circadian activity") %
   kable_styling()
 ```
 
-
 ```{r}
 library(lubridate)
 
@@ -155,16 +152,13 @@ kable(head(sum.nonmated), caption = "Table 3: Mosquito circadian activity") %>%
   kable_styling()
 ```
 
-
 ```{r}
 library(scales)
 
 ggplot(sum.nonmated, aes(x=hour_bin, y=Total_Activity))+
   geom_col()+
   facet_wrap(~Treatment, ncol = 1)+
-  scale_x_datetime(labels = date_format("%H:%M")) 
+  scale_x_datetime(labels = date_format("%H:%M"))+
+  ylim(0,1200)
 
 ```
-
-
-

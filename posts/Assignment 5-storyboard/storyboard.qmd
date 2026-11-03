@@ -1,5 +1,5 @@
 ---
-title: "Assignment 5: Creating a storyboard"
+title: "Assignment 5- creating a storybaord"
 author: "Ronald Bentil"
 date: "2023-09-28"
 categories: [news, code, analysis]
@@ -7,97 +7,76 @@ code-fold: true
 code-tools: true
 ---
 
-## Prepare the data
-
-This page reads the activity workbook directly so it can render in a fresh R session. Treatment assignments follow the channel groups used in Assignment 3.
 
 ```{r}
-#| label: prepare-data
-#| message: false
-library(readxl)
-library(dplyr)
-library(tidyr)
-library(stringr)
+df<- sum.mated
+
+
+library(lubridate) 
+
+df$hour_bin <- ymd_hms(df$hour_bin)
+
+ggplot(df, aes(x = hour_bin, y = Total_Activity)) +
+  geom_line() +
+  facet_wrap(~Treatment) + 
+  scale_x_datetime(date_labels = "%H:%M")
+
+```
+```{r}
+df<- sum.nonmated
+
+
+library(lubridate) 
+
+df$hour_bin <- ymd_hms(df$hour_bin)
+
+ggplot(df, aes(x = hour_bin, y = Total_Activity)) +
+  geom_line() +
+  facet_wrap(~Treatment) + 
+  scale_x_datetime(date_labels = "%H:%M")
+```
+#filtering control only as treatment
+
+
+## Mated
+```{r}
 library(lubridate)
 library(ggplot2)
 
-workbook <- file.path("..", "Assignment 3", "DAMdata.xlsx")
-if (!file.exists(workbook)) {
-  workbook <- file.path("posts", "Assignment 3", "DAMdata.xlsx")
-}
-if (!file.exists(workbook)) stop("Cannot locate Assignment 3/DAMdata.xlsx")
+df <- sum.mated
 
-prepare_activity <- function(sheet) {
-  raw <- read_excel(workbook, sheet = sheet, skip = 1)
-  if (!"Time" %in% names(raw)) stop("Missing Time column in sheet: ", sheet)
-  if (!inherits(raw$Time, "POSIXt")) {
-    if (is.numeric(raw$Time)) stop("Numeric Time values require verification of the Excel date/time format.")
-    raw$Time <- ymd_hms(raw$Time, quiet = TRUE)
-  }
-  if (anyNA(raw$Time)) stop("Missing or unparseable Time values in sheet: ", sheet)
-  long <- raw %>%
-    pivot_longer(cols = -Time, names_to = "ID", values_to = "Activity") %>%
-    mutate(
-      channel = as.numeric(str_extract(ID, "[0-9]+")),
-      Treatment = case_when(
-        channel >= 1 & channel <= 8 ~ "Control",
-        channel <= 16 & channel >= 9 ~ "0.15uM Serotonin",
-        channel <= 24 & channel >= 17 ~ "1.5uM Serotonin",
-        channel <= 32 & channel >= 25 ~ "15uM Serotonin",
-        TRUE ~ "Other"
-      )
-    )
-  if (!is.numeric(long$Activity)) stop("Activity must be numeric in sheet: ", sheet)
-  if (anyNA(long$Activity)) stop("Missing activity values require review in sheet: ", sheet)
-  if (any(long$Treatment == "Other")) stop("Unrecognized channel IDs in sheet: ", sheet)
-  long %>%
-    mutate(hour_bin = floor_date(Time, unit = "hour")) %>%
-    group_by(hour_bin, Treatment) %>%
-    summarise(Total_Activity = sum(Activity), .groups = "drop")
-}
 
-sum.mated <- prepare_activity("mated")
-sum.nonmated <- prepare_activity("non-mated")
-```
+df$hour_bin <- ymd_hms(df$hour_bin)
 
-## Mated mosquitoes
+specific_treatment <- "Control"
+filtered_df <- df[df$Treatment == specific_treatment,]
 
-```{r}
-ggplot(sum.mated, aes(x = hour_bin, y = Total_Activity)) +
-  geom_line() +
-  facet_wrap(~Treatment) +
-  scale_x_datetime(date_labels = "%H:%M") +
-  labs(x = "Time", y = "Total activity", title = "Mated mosquitoes")
-```
 
-## Non-mated mosquitoes
-
-```{r}
-ggplot(sum.nonmated, aes(x = hour_bin, y = Total_Activity)) +
-  geom_line() +
-  facet_wrap(~Treatment) +
-  scale_x_datetime(date_labels = "%H:%M") +
-  labs(x = "Time", y = "Total activity", title = "Non-mated mosquitoes")
-```
-
-## Control treatment only
-
-### Mated
-
-```{r}
-ggplot(filter(sum.mated, Treatment == "Control"),
-       aes(x = hour_bin, y = Total_Activity)) +
+ggplot(filtered_df, aes(x = hour_bin, y = Total_Activity)) +
   geom_line() +
   scale_x_datetime(date_labels = "%H:%M") +
-  labs(x = "Time", y = "Total activity", title = "Mated: Control")
+  labs(title = paste("Treatment:", specific_treatment))
+
 ```
 
-### Non-mated
 
+## Non-mated
 ```{r}
-ggplot(filter(sum.nonmated, Treatment == "Control"),
-       aes(x = hour_bin, y = Total_Activity)) +
+df <- sum.nonmated
+
+
+df$hour_bin <- ymd_hms(df$hour_bin)
+
+# Filter the data for a specific treatment (e.g., "Treatment1")
+specific_treatment <- "Control"
+filtered_df <- df[df$Treatment == specific_treatment,]
+
+# Create the plot for the specific treatment
+ggplot(filtered_df, aes(x = hour_bin, y = Total_Activity)) +
   geom_line() +
   scale_x_datetime(date_labels = "%H:%M") +
-  labs(x = "Time", y = "Total activity", title = "Non-mated: Control")
+  labs(title = paste("Treatment:", specific_treatment))
+
 ```
+
+
